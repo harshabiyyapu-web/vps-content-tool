@@ -3,8 +3,8 @@ services:
     build:
       context: ./vps-app
       dockerfile: Dockerfile
-    expose:
-      - "80"
+    ports:
+      - "3457:80"
     restart: unless-stopped
     environment:
       - NODE_ENV=production

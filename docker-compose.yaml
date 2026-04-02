@@ -3,11 +3,9 @@ services:
     build:
       context: ./vps-app
       dockerfile: Dockerfile
-    # PORT env var lets Coolify (or you) set any host port.
-    # If not set, the entrypoint script will scan for a free port
-    # starting at 3000 and assign it automatically.
-    ports:
-      - "${PORT:-0}:80"
+    # Expose port inside Docker network — Coolify's Traefik connects directly
+    expose:
+      - "80"
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -18,7 +16,13 @@ services:
       retries: 3
       start_period: 10s
     labels:
-      # Coolify picks these up automatically
+      # Coolify / Traefik routing
       - "coolify.managed=true"
       - "coolify.name=daily-work-management"
       - "coolify.port=80"
+      - "traefik.enable=true"
+      - "traefik.http.routers.daily-work.rule=Host(`njieta.org`) || Host(`www.njieta.org`)"
+      - "traefik.http.routers.daily-work.entrypoints=https"
+      - "traefik.http.routers.daily-work.tls=true"
+      - "traefik.http.routers.daily-work.tls.certresolver=letsencrypt"
+      - "traefik.http.services.daily-work.loadbalancer.server.port=80"

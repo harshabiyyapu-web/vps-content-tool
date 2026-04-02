@@ -8,6 +8,8 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+    networks:
+      - coolify
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:80"]
       interval: 30s
@@ -17,3 +19,7 @@ services:
     labels:
       - "coolify.managed=true"
       - "coolify.port=80"
+
+networks:
+  coolify:
+    external: true

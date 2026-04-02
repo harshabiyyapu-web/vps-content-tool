@@ -1,0 +1,24 @@
+services:
+  daily-work-management:
+    build:
+      context: ./vps-app
+      dockerfile: Dockerfile
+    # PORT env var lets Coolify (or you) set any host port.
+    # If not set, the entrypoint script will scan for a free port
+    # starting at 3000 and assign it automatically.
+    ports:
+      - "${PORT:-0}:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      # Coolify picks these up automatically
+      - "coolify.managed=true"
+      - "coolify.name=daily-work-management"
+      - "coolify.port=80"

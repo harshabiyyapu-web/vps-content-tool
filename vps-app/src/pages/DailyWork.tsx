@@ -857,8 +857,7 @@ export function DailyWork() {
     [entries, selectedDate],
   )
 
-  const totalTopics = dateEntries.reduce((s, e) => s + e.topics.length, 0)
-  const doneTopics = dateEntries.reduce((s, e) => s + e.topics.filter((t) => t.isDone).length, 0)
+
   const totalCountries = dateEntries.length
   const doneCountries = dateEntries.filter((e) => e.topics.length > 0 && e.topics.every((t) => t.isDone)).length
 
